@@ -1,61 +1,31 @@
 import { motion } from "framer-motion";
 import { HiArrowUpRight } from "react-icons/hi2";
-
-// 1. IMPORT GAMBAR (Pastikan nama & ekstensi file ini ADA di folder src/assets)
-import projectImg1 from "../assets/smartfinance.png";
-import projectImg2 from "../assets/profilkotabogor.png";
-import projectImg3 from "../assets/fathomxdistro.png";
-import projectImg4 from "../assets/portofolio1.png";
-import projectImg5 from "../assets/portofolio2.png";
-import projectImg6 from "../assets/kalkulatorsederhana.png";
+// Contoh cara import gambar dari folder assets (sesuaikan dengan file kamu nanti)
+import projectImg1 from "../assets/batman.png"; 
 
 const PROJECTS = [
   {
-    title: "Smart Finance",
+    title: "Personal Portfolio Website",
     description:
-      "Sebuah aplikasi finansial keuangan berbasis web untuk memudahkan anak muda seperti  gen z, untuk mengatur dan mencatat keuangan serta menghitung pengeluaran.",
-    tags: ["React", "Tailwind CSS", "Node JS"],
+      "A responsive developer portfolio built to showcase my projects, skills, and journey as a Software Engineering student.",
+    tags: ["React", "Tailwind CSS", "Framer Motion"],
+    image: projectImg1, 
+    link: "https://github.com/muhammadfathan", // Nanti tinggal ganti link aslimu di sini
+  },
+  {
+    title: "Task Management App",
+    description:
+      "A clean task tracker with create, update, and delete functionality, built to practice component state and UI structure.",
+    tags: ["React", "JavaScript", "Tailwind CSS"],
+    image: projectImg1, 
+    link: "#",
+  },
+  {
+    title: "Landing Page Redesign",
+    description:
+      "A modern redesign of a product landing page focused on clear hierarchy, responsive layout, and smooth interactions.",
+    tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg1,
-    link: "https://github.com/muhammadfathan",
-  },
-  {
-    title: "Profil Kota Bogor",
-    description:
-      "Web profil kota bogor",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg2,
-    link: "#",
-  },
-  {
-    title: "FathomXDistro",
-    description:
-      "Landing page aplikasi eco-merce distro berbasis web dengan fitur pesanan online.",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg3,
-    link: "#",
-  },
-  {
-    title: "Portofolio 1", // Judul dibedakan agar unik
-    description:
-      "Portofolio website.",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg4,
-    link: "#",
-  },
-  {
-    title: "Portofolio 2", // Judul dibedakan agar unik
-    description:
-      "Portofolio website.",
-    tags: ["React", "Tailwind", "Vite"],
-    image: projectImg5,
-    link: "#",
-  },
-  {
-    title: "Kalkulator Sederhana",
-    description:
-      "Kalkulator sederhana berbasis web",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg6,
     link: "#",
   },
 ];
@@ -106,16 +76,16 @@ function Projects() {
           viewport={{ once: true, amount: 0.15 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {PROJECTS.map((project, index) => (
+          {PROJECTS.map((project) => (
             <motion.div
-              key={index} // Menggunakan index agar aman dari masalah duplicate key
+              key={project.title}
               variants={cardVariants}
               className="group flex flex-col bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 ease-out"
             >
               {/* Wadah FOTO PROJECT - DIKUNCI LANDSCAPE 16:9 */}
               <div className="relative w-full aspect-video bg-neutral-950 overflow-hidden border-b border-neutral-800">
-                <img
-                  src={project.image}
+                <img 
+                  src={project.image} 
                   alt={`Screenshot of ${project.title}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
@@ -142,7 +112,7 @@ function Projects() {
                   ))}
                 </div>
 
-                {/* Tombol View Project */}
+                {/* Tombol View Project (Siap klik ke tab baru) */}
                 <a
                   href={project.link}
                   target="_blank"

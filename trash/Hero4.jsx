@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import heroImg from "../assets/Hero.png";
 
 // List kata untuk efek mengetik (bisa ditambah/diubah)
@@ -8,9 +8,6 @@ const wordsToType = [
   "Frontend Developer",
   "React & Web Enthusiast",
 ];
-
-// Batas maksimal sudut tilt foto (derajat)
-const MAX_TILT = 14;
 
 function Hero() {
   // State untuk Mouse Position (Efek Spotlight Background)
@@ -22,57 +19,13 @@ function Hero() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [displayText, setDisplayText] = useState("");
 
-  // Motion values untuk efek tilt foto — dibungkus useSpring supaya
-  // gerakannya halus (tidak patah-patah) baik saat mouse maupun sentuhan.
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, { stiffness: 150, damping: 15 });
-  const springRotateY = useSpring(rotateY, { stiffness: 150, damping: 15 });
-
-  // Logic Mouse Move (Spotlight Background) — juga dipakai ulang untuk touch
-  // agar efek spotlight tetap terasa interaktif di HP.
-  const updateSpotlight = (clientX, clientY, currentTarget) => {
-    const rect = currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: clientX - rect.left,
-      y: clientY - rect.top,
-    });
-  };
-
+  // Logic Mouse Move
   const handleMouseMove = (e) => {
-    updateSpotlight(e.clientX, e.clientY, e.currentTarget);
-  };
-
-  const handleTouchMove = (e) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    updateSpotlight(touch.clientX, touch.clientY, e.currentTarget);
-  };
-
-  // Logic Tilt Foto — menghitung posisi kursor/jari relatif terhadap
-  // titik tengah foto, lalu memutar sedikit ke arah tersebut ("tilt inward").
-  const updateTilt = (clientX, clientY, currentTarget) => {
-    const rect = currentTarget.getBoundingClientRect();
-    const px = (clientX - rect.left) / rect.width - 0.5; // -0.5 .. 0.5
-    const py = (clientY - rect.top) / rect.height - 0.5; // -0.5 .. 0.5
-
-    rotateY.set(px * MAX_TILT * 2);
-    rotateX.set(-py * MAX_TILT * 2);
-  };
-
-  const handlePhotoMouseMove = (e) => {
-    updateTilt(e.clientX, e.clientY, e.currentTarget);
-  };
-
-  const handlePhotoTouchMove = (e) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    updateTilt(touch.clientX, touch.clientY, e.currentTarget);
-  };
-
-  const resetTilt = () => {
-    rotateX.set(0);
-    rotateY.set(0);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
   // Logic Typewriter Loop (Infinite)
@@ -108,10 +61,9 @@ function Hero() {
     <section
       id="hero"
       onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
       className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 overflow-hidden"
     >
-      {/* 1. HOVER SPOTLIGHT EFFECT (Mengikuti Kursor / Sentuhan) */}
+      {/* 1. HOVER SPOTLIGHT EFFECT (Mengikuti Kursor) */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
         style={{
@@ -147,20 +99,19 @@ function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col items-start text-left"
         >
-          {/* Badge Status — dirapikan: dot ping + dot solid ditumpuk agar
-              titik hijau/biru tidak "hilang" saat animasi ping berjalan */}
-          <div className="inline-flex items-center gap-2.5 pl-3 pr-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-6 backdrop-blur-md">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-400" />
-            </span>
-            <span className="leading-none">Available for New Projects</span>
+          {/* Badge Status */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-6 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
+            <span>Available for New Projects</span>
           </div>
 
           <p className="text-gray-400 font-medium text-sm uppercase tracking-widest mb-2">
             Hello, I'm
           </p>
 
+          {/* FIX: nama "Ali Khalifah" sekarang solid blue, bukan gradient
+              bg-clip-text — menghindari bug teks tampak hitam/pecah di
+              beberapa browser saat background-clip tidak ter-render. */}
           <h1 className="font-heading text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             Muhammad Fathan{" "}
             <span className="text-blue-400">Ali Khalifah</span>
@@ -173,15 +124,15 @@ function Hero() {
           </h2>
 
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed max-w-xl mb-10">
-            I build clean, responsive, and user focused web interfaces.
+            I build clean, responsive, and user-focused web interfaces.
             Currently sharpening my skills in modern frontend development while
-            exploring software engineering fundamentals through real world
+            exploring software engineering fundamentals through real-world
             projects.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             {/* FUTURISTIC "View Projects" BOX — angled corners, glowing
-                border, and a scanning light sweep on hover/tap */}
+                border, and a scanning light sweep on hover */}
             <motion.a
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -191,7 +142,7 @@ function Hero() {
                 clipPath:
                   "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
               }}
-              className="group relative inline-flex items-center justify-center gap-2 px-7 py-3.5 font-medium text-sm text-white bg-neutral-900 border border-blue-500/50 hover:border-blue-400 active:border-blue-400 transition-colors duration-300 shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_30px_rgba(59,130,246,0.45)] overflow-hidden"
+              className="group relative inline-flex items-center justify-center gap-2 px-7 py-3.5 font-medium text-sm text-white bg-neutral-900 border border-blue-500/50 hover:border-blue-400 transition-colors duration-300 shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_30px_rgba(59,130,246,0.45)] overflow-hidden"
             >
               {/* corner accents */}
               <span className="absolute top-0 left-3 w-2 h-px bg-blue-400" />
@@ -207,7 +158,7 @@ function Hero() {
 
               <span className="relative">View Projects</span>
               <svg
-                className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-active:translate-x-1"
+                className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -233,7 +184,7 @@ function Hero() {
           </div>
         </motion.div>
 
-        {/* RIGHT: IMAGE WITH FLOATING + TILT ANIMATION */}
+        {/* RIGHT: IMAGE WITH FLOATING ANIMATION */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -245,30 +196,18 @@ function Hero() {
             animate={{ y: [-10, 10, -10] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96"
-            style={{ perspective: 800 }}
           >
             {/* Glowing Backdrop */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 opacity-20 blur-3xl animate-pulse" />
 
-            {/* Profile Picture Frame — tilts inward toward cursor/finger */}
-            <motion.div
-              onMouseMove={handlePhotoMouseMove}
-              onMouseLeave={resetTilt}
-              onTouchMove={handlePhotoTouchMove}
-              onTouchEnd={resetTilt}
-              style={{
-                rotateX: springRotateX,
-                rotateY: springRotateY,
-                transformStyle: "preserve-3d",
-              }}
-              className="relative w-full h-full rounded-full p-1.5 bg-gradient-to-b from-blue-500/30 to-neutral-800/80 shadow-2xl"
-            >
+            {/* Profile Picture Frame */}
+            <div className="relative w-full h-full rounded-full p-1.5 bg-gradient-to-b from-blue-500/30 to-neutral-800/80 shadow-2xl">
               <img
                 src={heroImg}
                 alt="Portrait of Muhammad Fathan Ali Khalifah"
-                className="w-full h-full object-cover rounded-full bg-neutral-900 pointer-events-none"
+                className="w-full h-full object-cover rounded-full bg-neutral-900"
               />
-            </motion.div>
+            </div>
           </motion.div>
         </motion.div>
       </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import heroImg from "../assets/Hero.png";
 
 // List kata untuk efek mengetik (bisa ditambah/diubah)
@@ -8,9 +8,6 @@ const wordsToType = [
   "Frontend Developer",
   "React & Web Enthusiast",
 ];
-
-// Batas maksimal sudut tilt foto (derajat)
-const MAX_TILT = 14;
 
 function Hero() {
   // State untuk Mouse Position (Efek Spotlight Background)
@@ -22,57 +19,13 @@ function Hero() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [displayText, setDisplayText] = useState("");
 
-  // Motion values untuk efek tilt foto — dibungkus useSpring supaya
-  // gerakannya halus (tidak patah-patah) baik saat mouse maupun sentuhan.
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, { stiffness: 150, damping: 15 });
-  const springRotateY = useSpring(rotateY, { stiffness: 150, damping: 15 });
-
-  // Logic Mouse Move (Spotlight Background) — juga dipakai ulang untuk touch
-  // agar efek spotlight tetap terasa interaktif di HP.
-  const updateSpotlight = (clientX, clientY, currentTarget) => {
-    const rect = currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: clientX - rect.left,
-      y: clientY - rect.top,
-    });
-  };
-
+  // Logic Mouse Move
   const handleMouseMove = (e) => {
-    updateSpotlight(e.clientX, e.clientY, e.currentTarget);
-  };
-
-  const handleTouchMove = (e) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    updateSpotlight(touch.clientX, touch.clientY, e.currentTarget);
-  };
-
-  // Logic Tilt Foto — menghitung posisi kursor/jari relatif terhadap
-  // titik tengah foto, lalu memutar sedikit ke arah tersebut ("tilt inward").
-  const updateTilt = (clientX, clientY, currentTarget) => {
-    const rect = currentTarget.getBoundingClientRect();
-    const px = (clientX - rect.left) / rect.width - 0.5; // -0.5 .. 0.5
-    const py = (clientY - rect.top) / rect.height - 0.5; // -0.5 .. 0.5
-
-    rotateY.set(px * MAX_TILT * 2);
-    rotateX.set(-py * MAX_TILT * 2);
-  };
-
-  const handlePhotoMouseMove = (e) => {
-    updateTilt(e.clientX, e.clientY, e.currentTarget);
-  };
-
-  const handlePhotoTouchMove = (e) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    updateTilt(touch.clientX, touch.clientY, e.currentTarget);
-  };
-
-  const resetTilt = () => {
-    rotateX.set(0);
-    rotateY.set(0);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
   // Logic Typewriter Loop (Infinite)
@@ -108,10 +61,9 @@ function Hero() {
     <section
       id="hero"
       onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
       className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 overflow-hidden"
     >
-      {/* 1. HOVER SPOTLIGHT EFFECT (Mengikuti Kursor / Sentuhan) */}
+      {/* 1. HOVER SPOTLIGHT EFFECT (Mengikuti Kursor) */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
         style={{
@@ -147,14 +99,10 @@ function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col items-start text-left"
         >
-          {/* Badge Status — dirapikan: dot ping + dot solid ditumpuk agar
-              titik hijau/biru tidak "hilang" saat animasi ping berjalan */}
-          <div className="inline-flex items-center gap-2.5 pl-3 pr-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-6 backdrop-blur-md">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-400" />
-            </span>
-            <span className="leading-none">Available for New Projects</span>
+          {/* Badge Status */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-6 backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
+            <span>Available for New Projects</span>
           </div>
 
           <p className="text-gray-400 font-medium text-sm uppercase tracking-widest mb-2">
@@ -163,7 +111,9 @@ function Hero() {
 
           <h1 className="font-heading text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             Muhammad Fathan{" "}
-            <span className="text-blue-400">Ali Khalifah</span>
+            <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
+              Ali Khalifah
+            </span>
           </h1>
 
           {/* 3. INFINITE TYPEWRITER TEXT */}
@@ -173,51 +123,23 @@ function Hero() {
           </h2>
 
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed max-w-xl mb-10">
-            I build clean, responsive, and user focused web interfaces.
+            I build clean, responsive, and user-focused web interfaces.
             Currently sharpening my skills in modern frontend development while
-            exploring software engineering fundamentals through real world
+            exploring software engineering fundamentals through real-world
             projects.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            {/* FUTURISTIC "View Projects" BOX — angled corners, glowing
-                border, and a scanning light sweep on hover/tap */}
             <motion.a
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               href="#projects"
               aria-label="View my projects"
-              style={{
-                clipPath:
-                  "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
-              }}
-              className="group relative inline-flex items-center justify-center gap-2 px-7 py-3.5 font-medium text-sm text-white bg-neutral-900 border border-blue-500/50 hover:border-blue-400 active:border-blue-400 transition-colors duration-300 shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_30px_rgba(59,130,246,0.45)] overflow-hidden"
+              className="inline-flex items-center justify-center px-6 py-3.5 rounded-full font-medium text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/25"
             >
-              {/* corner accents */}
-              <span className="absolute top-0 left-3 w-2 h-px bg-blue-400" />
-              <span className="absolute bottom-0 right-3 w-2 h-px bg-blue-400" />
-
-              {/* scanning light sweep */}
-              <motion.span
-                aria-hidden="true"
-                animate={{ x: ["-120%", "220%"] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-                className="pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-blue-400/25 to-transparent skew-x-12"
-              />
-
-              <span className="relative">View Projects</span>
-              <svg
-                className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-active:translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
+              View Projects
+              <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </motion.a>
 
@@ -233,7 +155,7 @@ function Hero() {
           </div>
         </motion.div>
 
-        {/* RIGHT: IMAGE WITH FLOATING + TILT ANIMATION */}
+        {/* RIGHT: IMAGE WITH FLOATING BADGES & ANIMATION */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -245,33 +167,46 @@ function Hero() {
             animate={{ y: [-10, 10, -10] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96"
-            style={{ perspective: 800 }}
           >
             {/* Glowing Backdrop */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 opacity-20 blur-3xl animate-pulse" />
 
-            {/* Profile Picture Frame — tilts inward toward cursor/finger */}
-            <motion.div
-              onMouseMove={handlePhotoMouseMove}
-              onMouseLeave={resetTilt}
-              onTouchMove={handlePhotoTouchMove}
-              onTouchEnd={resetTilt}
-              style={{
-                rotateX: springRotateX,
-                rotateY: springRotateY,
-                transformStyle: "preserve-3d",
-              }}
-              className="relative w-full h-full rounded-full p-1.5 bg-gradient-to-b from-blue-500/30 to-neutral-800/80 shadow-2xl"
-            >
+            {/* Profile Picture Frame */}
+            <div className="relative w-full h-full rounded-full p-1.5 bg-gradient-to-b from-blue-500/30 to-neutral-800/80 shadow-2xl">
               <img
                 src={heroImg}
                 alt="Portrait of Muhammad Fathan Ali Khalifah"
-                className="w-full h-full object-cover rounded-full bg-neutral-900 pointer-events-none"
+                className="w-full h-full object-cover rounded-full bg-neutral-900"
               />
+            </div>
+
+            {/* 4. FLOATING TECH BADGES (Extra Elements) */}
+            <motion.div
+              animate={{ y: [5, -5, 5] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-2 -left-4 bg-neutral-900/80 border border-neutral-800 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs text-gray-200 font-medium"
+            >
+              <span className="text-xl">🚀</span>
+              <div>
+                <p className="text-white font-bold">React & Tailwind</p>
+                <p className="text-gray-400 text-[10px]">Modern Stack</p>
+              </div>
             </motion.div>
           </motion.div>
         </motion.div>
       </div>
+
+      {/* 5. SCROLL DOWN INDICATOR */}
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity"
+      >
+        <span className="text-[10px] uppercase tracking-widest text-gray-400">Scroll</span>
+        <div className="w-5 h-8 border-2 border-gray-600 rounded-full flex justify-center p-1">
+          <div className="w-1 h-2 bg-blue-500 rounded-full animate-bounce" />
+        </div>
+      </motion.div>
     </section>
   );
 }

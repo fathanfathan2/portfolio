@@ -2,7 +2,10 @@ import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Skills from "./sections/Skills";
-import Projects from "./sections/Projects"; // 1. Import Projects
+import Projects from "./sections/Projects";
+import Certificates from "./sections/Certificates";
+import Contact from "./sections/Contact";
+import Footer from "./sections/Footer"; // <--- 1. Import Footer
 
 function App() {
   return (
@@ -11,7 +14,10 @@ function App() {
       <Hero />
       <About />
       <Skills />
-      <Projects /> {/* 2. Pasang Projects */}
+      <Projects />
+      <Certificates />
+      <Contact />
+      <Footer /> {/* <--- 2. Panggil di paling bawah */}
     </main>
   );
 }

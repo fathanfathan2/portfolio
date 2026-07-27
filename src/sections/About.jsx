@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 
 const TRAITS = [
-  { label: "Education", value: "SMK PPLG (Software Engineering)" },
-  { label: "Location", value: "Indonesia" },
+  { label: "Education", value: "SMKN 1 Ciomas PPLG (Software Engineering)" },
+  { label: "Location", value: "Bogor, Indonesia" },
   { label: "Focus", value: "Frontend & Software Fundamentals" },
   { label: "Interests", value: "Web Development & UI/UX" },
 ];
@@ -30,14 +30,17 @@ function About() {
           </h2>
 
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed mb-4">
-            I'm Muhammad Fathan Ali Khalifah, a Software Engineering (PPLG)
-            student at an SMK, currently building a solid foundation in web
-            development and software fundamentals.
+            I'm{" "}
+            <span className="text-blue-400 font-semibold">
+              Muhammad Fathan Ali Khalifah
+            </span>
+            , a Software Engineering (PPLG) student at an SMK, currently building a solid
+            foundation in web development and software fundamentals.
           </p>
 
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
             I'm passionate about frontend development and UI/UX design, and I
-            enjoy turning ideas into clean, modern, and user-friendly web
+            enjoy turning ideas into clean, modern, and user friendly web
             applications. This portfolio itself is part of that ongoing
             learning process.
           </p>
