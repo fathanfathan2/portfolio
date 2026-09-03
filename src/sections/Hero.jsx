@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import heroImg from "../assets/Hero.png";
+import heroImg from "../assets/Hero1.png";
 
 // List kata untuk efek mengetik (bisa ditambah/diubah)
 const wordsToType = [

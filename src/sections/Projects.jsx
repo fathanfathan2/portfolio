@@ -9,6 +9,7 @@ import projectImg4 from "../assets/portofolio1.png";
 import projectImg5 from "../assets/portofolio2.png";
 import projectImg6 from "../assets/kalkulatorsederhana.png";
 
+
 const PROJECTS = [
   {
     title: "Smart Finance",
@@ -24,7 +25,7 @@ const PROJECTS = [
       "Web profil kota bogor",
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg2,
-    link: "#",
+    link: "https://fathanfathan2.github.io/Profil-Kota-Bogor/",
   },
   {
     title: "FathomXDistro",
@@ -32,7 +33,7 @@ const PROJECTS = [
       "Landing page aplikasi eco-merce distro berbasis web dengan fitur pesanan online.",
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg3,
-    link: "#",
+    link: "https://fathanfathan2.github.io/FathomXDistro/",
   },
   {
     title: "Portofolio 1", // Judul dibedakan agar unik
@@ -40,7 +41,7 @@ const PROJECTS = [
       "Portofolio website.",
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg4,
-    link: "#",
+    link: "https://fathanfathan2.github.io/Portofolio-Fathan/",
   },
   {
     title: "Portofolio 2", // Judul dibedakan agar unik
@@ -48,7 +49,7 @@ const PROJECTS = [
       "Portofolio website.",
     tags: ["React", "Tailwind", "Vite"],
     image: projectImg5,
-    link: "#",
+    link: "https://portfolio-one-alpha-62.vercel.app/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadF9E17yNCuJc5K_kG2bdoTL1KbgdjPD55DIu3U2f1yMkcHe7efqlJa6VDMDQ_aem_Mcfj7emGueJR6hRAlQ0xzA",
   },
   {
     title: "Kalkulator Sederhana",
@@ -56,7 +57,7 @@ const PROJECTS = [
       "Kalkulator sederhana berbasis web",
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg6,
-    link: "#",
+    link: "https://fathanfathan2.github.io/Kalkulator-Sederhana/",
   },
 ];
 
