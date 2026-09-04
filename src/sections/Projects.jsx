@@ -8,7 +8,7 @@ import projectImg3 from "../assets/fathomxdistro.png";
 import projectImg4 from "../assets/portofolio1.png";
 import projectImg5 from "../assets/portofolio2.png";
 import projectImg6 from "../assets/kalkulatorsederhana.png";
-
+import projectImg7 from "../assets/gopiket.png";
 
 const PROJECTS = [
   {
@@ -58,6 +58,14 @@ const PROJECTS = [
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg6,
     link: "https://fathanfathan2.github.io/Kalkulator-Sederhana/",
+  },
+    {
+    title: "GoPiket",
+    description:
+      "Aplikasi berbasis web untuk memudahkan guru dalam mengatur jadwal piket kelas.",
+    tags: ["React", "Supabase", "JavaScript"],
+    image: projectImg7,
+    link: "https://gopiket.pplgsmkn1ciomas.my.id/",
   },
 ];
 
