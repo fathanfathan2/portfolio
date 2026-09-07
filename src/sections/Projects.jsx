@@ -17,7 +17,7 @@ const PROJECTS = [
       "Sebuah aplikasi finansial keuangan berbasis web untuk memudahkan anak muda seperti  gen z, untuk mengatur dan mencatat keuangan serta menghitung pengeluaran.",
     tags: ["React", "Tailwind CSS", "Node JS"],
     image: projectImg1,
-    link: "https://github.com/muhammadfathan",
+    link: "https://github.com/fathanfathan2/smart-finance-app",
   },
   {
     title: "Profil Kota Bogor",
