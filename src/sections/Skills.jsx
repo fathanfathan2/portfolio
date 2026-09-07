@@ -8,6 +8,7 @@ import {
   FaGithub,
   FaFigma,
   FaNpm,
+  FaPython,
 } from "react-icons/fa";
 import { SiTailwindcss, SiVite } from "react-icons/si";
 
@@ -21,6 +22,13 @@ const SKILL_CATEGORIES = [
       { name: "React", icon: FaReact },
       { name: "Tailwind CSS", icon: SiTailwindcss },
       { name: "Vite", icon: SiVite },
+    ],
+  },
+  {
+    title: "Backend & Scripting",
+    skills: [
+      { name: "Python", icon: FaPython },
+      // Bisa ditambahkan FaNodeJs atau FaLaravel di sini nanti
     ],
   },
   {
