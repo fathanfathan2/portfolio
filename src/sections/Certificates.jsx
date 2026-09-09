@@ -24,9 +24,10 @@ import sertif11 from "../assets/sertif11.png";
 import sertif12 from "../assets/sertif12.png";
 import sertif13 from "../assets/sertif13.png";
 import sertif14 from "../assets/sertif14.png";
+import sertif15 from "../assets/sertifikat paham AI.png";
 
 // ---------------------------------------------------------------------------
-// DAFTAR SERTIFIKAT (14 DATA)
+// DAFTAR SERTIFIKAT (15 DATA)
 // ---------------------------------------------------------------------------
 const CERTIFICATES = [
   {
@@ -182,6 +183,17 @@ const CERTIFICATES = [
     category: "English",
     skills: ["English"],
     image: sertif14,
+  },
+    {
+    id: 15,
+    title: "Program Paham AI - Literasi kecerdasan Artifisial",
+    issuer: "Senopati Academy x Polri",
+    date: "2026",
+    credentialId: "DC-AJS-2026-9912",
+    credentialUrl: "#",
+    category: "Others",
+    skills: ["Education", "Literacy", "Artificial Intelligence"],
+    image: sertif15,
   },
 ];
 
