@@ -9,6 +9,7 @@ import projectImg4 from "../assets/portofolio1.png";
 import projectImg5 from "../assets/portofolio2.png";
 import projectImg6 from "../assets/kalkulatorsederhana.png";
 import projectImg7 from "../assets/gopiket.png";
+import projectImg8 from "../assets/tasktrack.png";
 
 const PROJECTS = [
   {
@@ -66,6 +67,14 @@ const PROJECTS = [
     tags: ["React", "Supabase", "JavaScript"],
     image: projectImg7,
     link: "https://gopiket.pplgsmkn1ciomas.my.id/",
+  },
+      {
+    title: "Task Tracker",
+    description:
+      "Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak tugas-tugas mereka.",
+    tags: ["React", "Tailwind", "Vite"],
+    image: projectImg8,
+    link: "https://task-track-pplg1809.vercel.app/",
   },
 ];
 
