@@ -12,26 +12,22 @@ const SOCIAL_LINKS = [
   {
     name: "GitHub",
     icon: FaGithub,
-    url: "https://github.com/fathanfathan2", // Ganti dengan URL GitHub kamu
+    url: "https://github.com/fathanfathan2", 
   },
   {
     name: "LinkedIn",
     icon: FaLinkedin,
-    url: "https://www.linkedin.com/in/fathan-ali-780b69384/", // Ganti dengan URL LinkedIn kamu
+    url: "https://www.linkedin.com/in/fathan-ali-780b69384/", 
   },
   {
     name: "Instagram",
     icon: FaInstagram,
-    url: "https://instagram.com/h0nestlyftshann_", // Ganti dengan URL Instagram kamu
+    url: "https://instagram.com/h0nestlyftshann_", 
   },
 ];
 
 function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,24 +39,19 @@ function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulasi pengiriman pesan (Bisa diintegrasikan dengan EmailJS/Formspree)
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
-
-      // Reset pesan sukses setelah 5 detik
       setTimeout(() => setIsSubmitted(false), 5000);
     }, 1500);
   };
 
   return (
     <section id="contact" className="relative bg-neutral-950 py-24 px-6 overflow-hidden">
-      {/* Background Glow */}
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -80,7 +71,6 @@ function Contact() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
-          {/* Sisi Kiri: Informasi Kontak */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -98,11 +88,8 @@ function Contact() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">Email</p>
-                    <a
-                      href="mailto:fathanali1809@gmail.com"
-                      className="text-white text-sm font-medium hover:text-blue-400 transition-colors"
-                    >
-                      fathanali1809@gmail.com {/* Ganti dengan email kamu */}
+                    <a href="mailto:fathanali1809@gmail.com" className="text-white text-sm font-medium hover:text-blue-400 transition-colors">
+                      fathanali1809@gmail.com
                     </a>
                   </div>
                 </div>
@@ -141,7 +128,6 @@ function Contact() {
             </div>
           </motion.div>
 
-          {/* Sisi Kanan: Form Kontak */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -151,9 +137,7 @@ function Contact() {
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Your Name
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Your Name</label>
                 <input
                   type="text"
                   name="name"
@@ -166,9 +150,7 @@ function Contact() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Your Email
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Your Email</label>
                 <input
                   type="email"
                   name="email"
@@ -181,9 +163,7 @@ function Contact() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Message
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
                 <textarea
                   name="message"
                   required

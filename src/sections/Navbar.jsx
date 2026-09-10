@@ -20,7 +20,6 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 💡 Fungsi khusus untuk menangani navigasi & scroll halus
   const handleNavClick = (e, href) => {
     e.preventDefault();
     setMenuOpen(false); // Tutup menu mobile
@@ -73,7 +72,7 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu (Animasinya Dikembalikan) */}
       <AnimatePresence>
         {menuOpen && (
           <motion.nav

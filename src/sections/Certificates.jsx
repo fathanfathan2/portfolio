@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   HiXMark,
   HiArrowTopRightOnSquare,
@@ -184,7 +183,7 @@ const CERTIFICATES = [
     skills: ["English"],
     image: sertif14,
   },
-    {
+  {
     id: 15,
     title: "Program Paham AI - Literasi kecerdasan Artifisial",
     issuer: "Senopati Academy x Polri",
@@ -199,43 +198,14 @@ const CERTIFICATES = [
 
 const CATEGORIES = ["All", "Software Engineering", "English", "Others"];
 
-// Variants animasi Framer Motion
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08 },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    transition: { duration: 0.2, ease: "easeOut" },
-  },
-};
-
 // ---------------------------------------------------------------------------
 // Kartu sertifikat tunggal
 // ---------------------------------------------------------------------------
 function CertificateCard({ cert, onOpen }) {
   return (
-    <motion.div
-      layout
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+    <div
       onClick={() => onOpen(cert)}
-      className="group relative cursor-pointer overflow-hidden rounded-xl bg-neutral-900/50 backdrop-blur-md border border-neutral-800 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-colors duration-300"
+      className="group relative cursor-pointer overflow-hidden rounded-xl bg-neutral-900/50 backdrop-blur-md border border-neutral-800 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
     >
       {/* Gambar sertifikat + efek zoom saat hover */}
       <div className="relative aspect-[3/2] overflow-hidden">
@@ -272,7 +242,7 @@ function CertificateCard({ cert, onOpen }) {
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -289,86 +259,76 @@ function CertificateModal({ cert, onClose }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
+  if (!cert) return null; // Jika tidak ada sertifikat yang dipilih, jangan render apa-apa
+
   return (
-    <AnimatePresence>
-      {cert && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-neutral-950/80 backdrop-blur-sm animate-in fade-in duration-200"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-blue-500/10 animate-in zoom-in-95 duration-200"
+      >
+        {/* Tombol close */}
+        <button
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-neutral-950/80 backdrop-blur-sm"
+          aria-label="Close certificate preview"
+          className="absolute top-4 right-4 z-10 flex items-center justify-center w-9 h-9 rounded-full bg-neutral-900/80 border border-neutral-700 text-gray-300 hover:text-white hover:border-blue-500/50 transition-colors duration-300"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 16 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-blue-500/10"
-          >
-            {/* Tombol close */}
-            <button
-              onClick={onClose}
-              aria-label="Close certificate preview"
-              className="absolute top-4 right-4 z-10 flex items-center justify-center w-9 h-9 rounded-full bg-neutral-900/80 border border-neutral-700 text-gray-300 hover:text-white hover:border-blue-500/50 transition-colors duration-300"
-            >
-              <HiXMark className="text-lg" />
-            </button>
+          <HiXMark className="text-lg" />
+        </button>
 
-            {/* Gambar sertifikat */}
-            <div className="relative aspect-[3/2] bg-neutral-950">
-              <img
-                src={cert.image}
-                alt={`${cert.title} certificate`}
-                className="w-full h-full object-contain"
-              />
-            </div>
+        {/* Gambar sertifikat */}
+        <div className="relative aspect-[3/2] bg-neutral-950">
+          <img
+            src={cert.image}
+            alt={`${cert.title} certificate`}
+            className="w-full h-full object-contain"
+          />
+        </div>
 
-            {/* Detail modal */}
-            <div className="p-6 sm:p-8">
-              <h3 className="font-heading text-white text-xl sm:text-2xl font-semibold mb-2">
-                {cert.title}
-              </h3>
+        {/* Detail modal */}
+        <div className="p-6 sm:p-8">
+          <h3 className="font-heading text-white text-xl sm:text-2xl font-semibold mb-2">
+            {cert.title}
+          </h3>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-400 mb-6">
-                <span className="text-blue-400 font-medium">{cert.issuer}</span>
-                <span className="inline-flex items-center gap-1.5">
-                  <HiCalendarDays className="text-base" />
-                  {cert.date}
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <HiCheckBadge className="text-base" />
-                  {cert.credentialId}
-                </span>
-              </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-400 mb-6">
+            <span className="text-blue-400 font-medium">{cert.issuer}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <HiCalendarDays className="text-base" />
+              {cert.date}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <HiCheckBadge className="text-base" />
+              {cert.credentialId}
+            </span>
+          </div>
 
-              <div className="flex flex-wrap gap-2 mb-8">
-                {cert.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="text-xs font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-
-              <a
-                href={cert.credentialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-sm bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 ease-out shadow-lg shadow-blue-500/20"
+          <div className="flex flex-wrap gap-2 mb-8">
+            {cert.skills.map((skill) => (
+              <span
+                key={skill}
+                className="text-xs font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1"
               >
-                Verify Credential
-                <HiArrowTopRightOnSquare className="text-base" />
-              </a>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                {skill}
+              </span>
+            ))}
+          </div>
+
+          <a
+            href={cert.credentialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-sm bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 ease-out shadow-lg shadow-blue-500/20"
+          >
+            Verify Credential
+            <HiArrowTopRightOnSquare className="text-base" />
+          </a>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -391,66 +351,38 @@ function Certificates() {
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mb-10 max-w-2xl"
-        >
+        <div className="mb-10 max-w-2xl">
           <p className="text-blue-500 font-medium text-sm uppercase tracking-widest mb-2">
             Achievements
           </p>
           <h2 className="font-heading text-white text-3xl sm:text-4xl font-semibold tracking-tight">
             Certificates
           </h2>
-        </motion.div>
+        </div>
 
         {/* Tab filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          className="flex flex-wrap gap-2 mb-12"
-        >
+        <div className="flex flex-wrap gap-2 mb-12">
           {CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
               className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
                 activeCategory === category
-                  ? "text-white"
+                  ? "bg-blue-500 text-white"
                   : "text-gray-400 hover:text-gray-200"
               }`}
             >
-              {activeCategory === category && (
-                <motion.span
-                  layoutId="activeCategoryPill"
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="absolute inset-0 bg-blue-500 rounded-full -z-10"
-                />
-              )}
               <span>{category}</span>
             </button>
           ))}
-        </motion.div>
+        </div>
 
         {/* Grid sertifikat */}
-        <motion.div
-          layout
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredCertificates.map((cert) => (
-              <CertificateCard key={cert.id} cert={cert} onOpen={setSelectedCert} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCertificates.map((cert) => (
+            <CertificateCard key={cert.id} cert={cert} onOpen={setSelectedCert} />
+          ))}
+        </div>
       </div>
 
       {/* Modal preview */}

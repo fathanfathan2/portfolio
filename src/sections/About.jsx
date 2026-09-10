@@ -9,12 +9,10 @@ const TRAITS = [
 
 function About() {
   return (
-    <section
-      id="about"
-      className="bg-neutral-950 py-24 px-6"
-    >
+    <section id="about" className="bg-neutral-950 py-24 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        {/* Left: introduction */}
+        
+        {/* Left: introduction dengan animasi */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -46,7 +44,7 @@ function About() {
           </p>
         </motion.div>
 
-        {/* Right: quick stats / traits */}
+        {/* Right: quick stats / traits dengan animasi (delay sedikit) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +55,7 @@ function About() {
           {TRAITS.map((trait) => (
             <div
               key={trait.label}
-              className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 hover:border-blue-500/50 transition-colors duration-300"
+              className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 hover:border-blue-500/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
             >
               <p className="text-blue-500 text-xs font-medium uppercase tracking-widest mb-2">
                 {trait.label}
@@ -68,6 +66,7 @@ function About() {
             </div>
           ))}
         </motion.div>
+        
       </div>
     </section>
   );

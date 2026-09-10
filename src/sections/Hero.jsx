@@ -2,35 +2,26 @@ import { useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import heroImg from "../assets/Hero2.png";
 
-// List kata untuk efek mengetik (bisa ditambah/diubah)
 const wordsToType = [
   "Software Engineering Student",
   "Frontend Developer",
   "React & Web Enthusiast",
 ];
 
-// Batas maksimal sudut tilt foto (derajat)
 const MAX_TILT = 14;
 
 function Hero() {
-  // State untuk Mouse Position (Efek Spotlight Background)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  // State untuk Typewriter Effect
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [displayText, setDisplayText] = useState("");
 
-  // Motion values untuk efek tilt foto — dibungkus useSpring supaya
-  // gerakannya halus (tidak patah-patah) baik saat mouse maupun sentuhan.
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const springRotateX = useSpring(rotateX, { stiffness: 150, damping: 15 });
   const springRotateY = useSpring(rotateY, { stiffness: 150, damping: 15 });
 
-  // Logic Mouse Move (Spotlight Background) — juga dipakai ulang untuk touch
-  // agar efek spotlight tetap terasa interaktif di HP.
   const updateSpotlight = (clientX, clientY, currentTarget) => {
     const rect = currentTarget.getBoundingClientRect();
     setMousePosition({
@@ -49,13 +40,10 @@ function Hero() {
     updateSpotlight(touch.clientX, touch.clientY, e.currentTarget);
   };
 
-  // Logic Tilt Foto — menghitung posisi kursor/jari relatif terhadap
-  // titik tengah foto, lalu memutar sedikit ke arah tersebut ("tilt inward").
   const updateTilt = (clientX, clientY, currentTarget) => {
     const rect = currentTarget.getBoundingClientRect();
-    const px = (clientX - rect.left) / rect.width - 0.5; // -0.5 .. 0.5
-    const py = (clientY - rect.top) / rect.height - 0.5; // -0.5 .. 0.5
-
+    const px = (clientX - rect.left) / rect.width - 0.5;
+    const py = (clientY - rect.top) / rect.height - 0.5;
     rotateY.set(px * MAX_TILT * 2);
     rotateX.set(-py * MAX_TILT * 2);
   };
@@ -75,13 +63,12 @@ function Hero() {
     rotateY.set(0);
   };
 
-  // Logic Typewriter Loop (Infinite)
   useEffect(() => {
     const currentWord = wordsToType[textIndex];
     let typingSpeed = isDeleting ? 40 : 80;
 
     if (!isDeleting && charIndex === currentWord.length) {
-      typingSpeed = 2000; // Tahan sebentar saat kata selesai diketik
+      typingSpeed = 2000; 
     } else if (isDeleting && charIndex === 0) {
       setIsDeleting(false);
       setTextIndex((prev) => (prev + 1) % wordsToType.length);
@@ -111,7 +98,6 @@ function Hero() {
       onTouchMove={handleTouchMove}
       className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 overflow-hidden"
     >
-      {/* 1. HOVER SPOTLIGHT EFFECT (Mengikuti Kursor / Sentuhan) */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
         style={{
@@ -119,9 +105,9 @@ function Hero() {
         }}
       />
 
-      {/* 2. BACKGROUND GRID PATTERN & FLOATING BLOBS */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293715_1px,transparent_1px),linear-gradient(to_bottom,#1f293715_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
+      {/* Blob Animasi Dikembalikan */}
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
@@ -140,15 +126,12 @@ function Hero() {
       />
 
       <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-center gap-12 relative z-10">
-        {/* LEFT: TEXT CONTENT */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col items-start text-left"
         >
-          {/* Badge Status — dirapikan: dot ping + dot solid ditumpuk agar
-              titik hijau/biru tidak "hilang" saat animasi ping berjalan */}
           <div className="inline-flex items-center gap-2.5 pl-3 pr-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-6 backdrop-blur-md">
             <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
@@ -166,7 +149,6 @@ function Hero() {
             <span className="text-blue-400">Ali Khalifah</span>
           </h1>
 
-          {/* 3. INFINITE TYPEWRITER TEXT */}
           <h2 className="font-heading text-blue-400 text-xl sm:text-2xl font-semibold mb-6 min-h-[36px] flex items-center">
             <span>{displayText}</span>
             <span className="w-0.5 h-6 bg-blue-400 ml-1 animate-pulse" />
@@ -180,8 +162,6 @@ function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            {/* FUTURISTIC "View Projects" BOX — angled corners, glowing
-                border, and a scanning light sweep on hover/tap */}
             <motion.a
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -193,11 +173,9 @@ function Hero() {
               }}
               className="group relative inline-flex items-center justify-center gap-2 px-7 py-3.5 font-medium text-sm text-white bg-neutral-900 border border-blue-500/50 hover:border-blue-400 active:border-blue-400 transition-colors duration-300 shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_30px_rgba(59,130,246,0.45)] overflow-hidden"
             >
-              {/* corner accents */}
               <span className="absolute top-0 left-3 w-2 h-px bg-blue-400" />
               <span className="absolute bottom-0 right-3 w-2 h-px bg-blue-400" />
 
-              {/* scanning light sweep */}
               <motion.span
                 aria-hidden="true"
                 animate={{ x: ["-120%", "220%"] }}
@@ -212,12 +190,7 @@ function Hero() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </motion.a>
 
@@ -233,24 +206,21 @@ function Hero() {
           </div>
         </motion.div>
 
-        {/* RIGHT: IMAGE WITH FLOATING + TILT ANIMATION */}
+        {/* 3D Tilt Animasi Dikembalikan */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex justify-center md:justify-end order-first md:order-last relative"
         >
-          {/* Main Floating Animation Container */}
           <motion.div
             animate={{ y: [-10, 10, -10] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96"
             style={{ perspective: 800 }}
           >
-            {/* Glowing Backdrop */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 opacity-20 blur-3xl animate-pulse" />
 
-            {/* Profile Picture Frame — tilts inward toward cursor/finger */}
             <motion.div
               onMouseMove={handlePhotoMouseMove}
               onMouseLeave={resetTilt}
