@@ -21,21 +21,21 @@ const PROJECTS = [
     image: projectImg1,
     link: "https://github.com/fathanfathan2/smart-finance-app",
   },
-  {
-    title: "Profil Kota Bogor",
+    {
+    title: "GoPiket",
     description:
-      "Web profil kota bogor",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg2,
-    link: "https://fathanfathan2.github.io/Profil-Kota-Bogor/",
+      "Aplikasi berbasis web untuk memudahkan guru dalam mengatur jadwal piket kelas.",
+    tags: ["React", "Supabase", "JavaScript"],
+    image: projectImg7,
+    link: "https://gopiket.pplgsmkn1ciomas.my.id/",
   },
-  {
-    title: "FathomXDistro",
+      {
+    title: "Computer Vision and Monkey Image",
     description:
-      "Landing page aplikasi eco-merce distro berbasis web dengan fitur pesanan online.",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg3,
-    link: "https://fathanfathan2.github.io/FathomXDistro/",
+      "Aplikasi berbasis web untuk mendeteksi gesture tangan menggunakan OpenCV dan Python dan bisa menggambarkan ilustrasi nya menggunakan images.",
+    tags: ["Python", "OpenCV"],
+    image: projectImg9,
+    link: "https://github.com/fathanfathan2/cv-gesture-recognition.git",
   },
   {
     title: "Portofolio 1", // Judul dibedakan agar unik
@@ -61,13 +61,13 @@ const PROJECTS = [
     image: projectImg6,
     link: "https://fathanfathan2.github.io/Kalkulator-Sederhana/",
   },
-    {
-    title: "GoPiket",
+  {
+    title: "Profil Kota Bogor",
     description:
-      "Aplikasi berbasis web untuk memudahkan guru dalam mengatur jadwal piket kelas.",
-    tags: ["React", "Supabase", "JavaScript"],
-    image: projectImg7,
-    link: "https://gopiket.pplgsmkn1ciomas.my.id/",
+      "Web profil kota bogor",
+    tags: ["HTML5", "CSS3", "JavaScript"],
+    image: projectImg2,
+    link: "https://fathanfathan2.github.io/Profil-Kota-Bogor/",
   },
     {
     title: "Task Tracker",
@@ -77,13 +77,13 @@ const PROJECTS = [
     image: projectImg8,
     link: "https://task-track-pplg1809.vercel.app/",
   },
-      {
-    title: "Computer Vision and Monkey Image",
+  {
+    title: "FathomXDistro",
     description:
-      "an application that utilizes computer vision techniques to analyze and process images of monkeys, providing insights and information about their behavior, habitat, and characteristics.",
-    tags: ["Python", "OpenCV"],
-    image: projectImg9,
-    link: "https://github.com/fathanfathan2/cv-gesture-recognition.git",
+      "Landing page aplikasi eco-merce distro berbasis web dengan fitur pesanan online.",
+    tags: ["HTML5", "CSS3", "JavaScript"],
+    image: projectImg3,
+    link: "https://fathanfathan2.github.io/FathomXDistro/",
   },
 ];
 
