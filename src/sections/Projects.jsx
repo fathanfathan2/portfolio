@@ -10,6 +10,7 @@ import projectImg5 from "../assets/portofolio2.png";
 import projectImg6 from "../assets/kalkulatorsederhana.png";
 import projectImg7 from "../assets/gopiket.png";
 import projectImg8 from "../assets/tasktrack.png";
+import projectImg9 from "../assets/cvmonkey.png";
 
 const PROJECTS = [
   {
@@ -68,13 +69,21 @@ const PROJECTS = [
     image: projectImg7,
     link: "https://gopiket.pplgsmkn1ciomas.my.id/",
   },
-      {
+    {
     title: "Task Tracker",
     description:
       "Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak tugas-tugas mereka.",
     tags: ["React", "Tailwind", "Vite"],
     image: projectImg8,
     link: "https://task-track-pplg1809.vercel.app/",
+  },
+      {
+    title: "Computer Vision and Monkey Image",
+    description:
+      "an application that utilizes computer vision techniques to analyze and process images of monkeys, providing insights and information about their behavior, habitat, and characteristics.",
+    tags: ["Python", "OpenCV"],
+    image: projectImg9,
+    link: "https://github.com/fathanfathan2/cv-gesture-recognition.git",
   },
 ];
 
