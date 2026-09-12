@@ -10,6 +10,7 @@ import projectImg6 from "../assets/kalkulatorsederhana.png";
 import projectImg7 from "../assets/gopiket.png";
 import projectImg8 from "../assets/tasktrack.png";
 import projectImg9 from "../assets/cvmonkey.png";
+import projectImg10 from "../assets/jadwalpiket.png";
 
 const PROJECTS = [
   {
@@ -87,6 +88,15 @@ const PROJECTS = [
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg3,
     link: "https://fathanfathan2.github.io/FathomXDistro/",
+    linkText: "View Project",
+  },
+    {
+    title: "Jadwal Piket",
+    description:
+      "Aplikasi berbasis web untuk mengelola jadwal piket.",
+    tags: ["Laravel", "Tailwind", "Vite", "MySQL", "PHP"],
+    image: projectImg10,
+    link: "https://github.com/fathanfathan2/jadwal-piket.git",
     linkText: "View Project",
   },
 ];
