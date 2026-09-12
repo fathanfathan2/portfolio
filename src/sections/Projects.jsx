@@ -97,7 +97,7 @@ const PROJECTS = [
     tags: ["Laravel", "Tailwind", "Vite", "MySQL", "PHP"],
     image: projectImg10,
     link: "https://github.com/fathanfathan2/jadwal-piket.git",
-    linkText: "View Project",
+    linkText: "View Repository",
   },
 ];
 
