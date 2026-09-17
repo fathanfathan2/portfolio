@@ -24,10 +24,28 @@ function Navbar() {
     e.preventDefault();
     setMenuOpen(false); // Tutup menu mobile
 
-    const targetElement = document.querySelector(href);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: "smooth" });
-    }
+    // Beri jeda 50ms agar animasi tutup menu tidak membatalkan efek scroll
+    setTimeout(() => {
+      // Khusus untuk link Logo (kembali ke atas)
+      if (href === "#top" || href === "#") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      const targetElement = document.querySelector(href);
+      if (targetElement) {
+        // h-16 di Tailwind sama dengan 64px. 
+        // Kita kurangi posisinya agar judul section tidak tertutup navbar
+        const navbarHeight = 64; 
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }, 50);
   };
 
   return (
@@ -38,12 +56,12 @@ function Navbar() {
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16 relative">
         {/* Logo */}
         <a
           href="#"
           onClick={(e) => handleNavClick(e, "#top")}
-          className="font-heading text-white text-lg font-semibold"
+          className="font-heading text-white text-lg font-semibold cursor-pointer"
         >
           Portfolio<span className="text-blue-500">.</span>
         </a>
@@ -55,7 +73,7 @@ function Navbar() {
               key={link.href}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.href)}
-              className="text-sm text-gray-300 hover:text-blue-500 transition-colors duration-300"
+              className="text-sm text-gray-300 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
             >
               {link.label}
             </a>
@@ -72,7 +90,7 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu (Animasinya Dikembalikan) */}
+      {/* Mobile menu (Diubah menjadi absolute agar melayang) */}
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
@@ -80,7 +98,7 @@ function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="md:hidden overflow-hidden bg-neutral-950/95 backdrop-blur-md border-b border-neutral-800"
+            className="md:hidden absolute top-full left-0 w-full overflow-hidden bg-neutral-950/95 backdrop-blur-md border-b border-neutral-800 shadow-xl"
           >
             <div className="flex flex-col gap-4 px-6 py-6">
               {NAV_LINKS.map((link) => (
@@ -88,7 +106,7 @@ function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="text-gray-300 hover:text-blue-500 transition-colors duration-300"
+                  className="text-gray-300 hover:text-blue-500 transition-colors duration-300 cursor-pointer"
                 >
                   {link.label}
                 </a>
