@@ -132,13 +132,7 @@ function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col items-start text-left"
         >
-          <div className="inline-flex items-center gap-2.5 pl-3 pr-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-6 backdrop-blur-md">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-400" />
-            </span>
-            <span className="leading-none">Available for New Projects</span>
-          </div>
+          {/* Bagian Available for New Projects dihapus dari sini */}
 
           <p className="text-gray-400 font-medium text-sm uppercase tracking-widest mb-2">
             Hello, I'm
