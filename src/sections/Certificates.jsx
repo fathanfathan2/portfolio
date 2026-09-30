@@ -24,9 +24,10 @@ import sertif12 from "../assets/sertif12.png";
 import sertif13 from "../assets/sertif13.png";
 import sertif14 from "../assets/sertif14.png";
 import sertif15 from "../assets/sertifikat paham AI.png";
+import sertif16 from "../assets/piagamoni.png";
 
 // ---------------------------------------------------------------------------
-// DAFTAR SERTIFIKAT (15 DATA)
+// DAFTAR SERTIFIKAT (16 DATA)
 // ---------------------------------------------------------------------------
 const CERTIFICATES = [
   {
@@ -193,6 +194,17 @@ const CERTIFICATES = [
     category: "Others",
     skills: ["Education", "Literacy", "Artificial Intelligence"],
     image: sertif15,
+  },
+    {
+    id: 16,
+    title: "Olimpiade Nasional Indonesia 17(online) -English",
+    issuer: "Olimpiade Nasional Indonesia",
+    date: "2026",
+    credentialId: "DC-AJS-2026-9912",
+    credentialUrl: "#",
+    category: "English",
+    skills: ["English"],
+    image: sertif16,
   },
 ];
 

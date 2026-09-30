@@ -11,6 +11,8 @@ import projectImg7 from "../assets/gopiket.png";
 import projectImg8 from "../assets/tasktrack.png";
 import projectImg9 from "../assets/cvmonkey.png";
 import projectImg10 from "../assets/jadwalpiket.png";
+import projectImg11 from "../assets/ruangamansiswa.png";
+import projectImg12 from "../assets/herbalnusantara.png";
 
 const PROJECTS = [
   {
@@ -29,6 +31,24 @@ const PROJECTS = [
     tags: ["React", "Supabase", "JavaScript"],
     image: projectImg7,
     link: "https://gopiket.pplgsmkn1ciomas.my.id/",
+    linkText: "View Project", // Teks khusus untuk Live Web
+  },
+    {
+    title: "Ruang Aman Siswa",
+    description:
+      "Aplikasi berbasis web untuk memanajemen bk dan konseling siswa di sekolah.",
+    tags: ["Laravel", "PHP", "MySQL"],
+    image: projectImg11,
+    link: "https://github.com/fathanfathan2/ruang-aman-siswa.git",
+    linkText: "View Repository", // Teks khusus untuk Live Web
+  },
+      {
+    title: "Herbal Nusantara",
+    description:
+      "Aplikasi berbasis web untuk memudahkan pengguna dalam mencari informasi tentang herbal nusantara.",
+    tags: ["React", "Tailwind", "Vite"],
+    image: projectImg12,
+    link: "https://herbal-nusantara.vercel.app/",
     linkText: "View Project", // Teks khusus untuk Live Web
   },
   {
