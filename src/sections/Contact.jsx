@@ -144,7 +144,7 @@ function Contact() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Name"
+                  placeholder="Your Name"
                   className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
