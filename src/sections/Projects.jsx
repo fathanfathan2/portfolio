@@ -12,7 +12,8 @@ import projectImg8 from "../assets/tasktrack.png";
 import projectImg9 from "../assets/cvmonkey.png";
 import projectImg10 from "../assets/jadwalpiket.png";
 import projectImg11 from "../assets/ruangamansiswa.png";
-// import projectImg12 from "../assets/herbalnusantara.png";
+import projectImg12 from "../assets/herbalnusantara.png";
+import projectImg13 from "../assets/fanfinance.png";
 
 const PROJECTS = [
   {
@@ -42,15 +43,24 @@ const PROJECTS = [
     link: "https://github.com/fathanfathan2/ruang-aman-siswa.git",
     linkText: "View Repository", // Teks khusus untuk Live Web
   },
-  //     {
-  //   title: "Herbal Nusantara",
-  //   description:
-  //     "Aplikasi berbasis web untuk memudahkan pengguna dalam mencari informasi tentang herbal nusantara.",
-  //   tags: ["React", "Tailwind", "Vite"],
-  //   image: projectImg12,
-  //   link: "https://herbal-nusantara.vercel.app/",
-  //   linkText: "View Project", // Teks khusus untuk Live Web
-  // },
+      {
+    title: "Herbal Nusantara",
+    description:
+      "Aplikasi berbasis web untuk memudahkan pengguna dalam mencari informasi tentang herbal nusantara.",
+    tags: ["React", "Tailwind", "Vite"],
+    image: projectImg12,
+    link: "https://herbal-nusantara.vercel.app/",
+    linkText: "View Project", // Teks khusus untuk Live Web
+  },
+        {
+    title: "Fan Finance",
+    description:
+      "Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak keuangan mereka.",
+    tags: ["HTML5", "CSS3", "JavaScript"],
+    image: projectImg13,
+    link: "https://fanfinance.vercel.app/",
+    linkText: "View Project", // Teks khusus untuk Live Web
+  },
   {
     title: "Computer Vision and Monkey Image",
     description:
