@@ -46,7 +46,7 @@ const PROJECTS = [
       {
     title: "Herbal Nusantara",
     description:
-      "Aplikasi berbasis web untuk memudahkan pengguna dalam mencari informasi tentang herbal nusantara.",
+      "(FrontEnd) Aplikasi berbasis web untuk memudahkan pengguna dalam mencari informasi tentang herbal nusantara.",
     tags: ["React", "Tailwind", "Vite"],
     image: projectImg12,
     link: "https://herbal-nusantara.vercel.app/",
@@ -55,7 +55,7 @@ const PROJECTS = [
         {
     title: "Fan Finance",
     description:
-      "Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak keuangan mereka.",
+      "(FrontEnd) Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak keuangan mereka.",
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg13,
     link: "https://fanfinance.vercel.app/",
@@ -105,7 +105,7 @@ const PROJECTS = [
   {
     title: "Task Tracker",
     description:
-      "Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak tugas-tugas mereka.",
+      "(FrontEnd) Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak tugas-tugas mereka.",
     tags: ["React", "Tailwind", "Vite"],
     image: projectImg8,
     link: "https://task-track-pplg1809.vercel.app/",
@@ -114,7 +114,7 @@ const PROJECTS = [
   {
     title: "FathomXDistro",
     description:
-      "Landing page aplikasi eco-merce distro berbasis web dengan fitur pesanan online.",
+      "(FrontEnd) Landing page aplikasi eco-merce distro berbasis web dengan fitur pesanan online.",
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg3,
     link: "https://fathanfathan2.github.io/FathomXDistro/",
