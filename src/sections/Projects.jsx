@@ -4,8 +4,6 @@ import { HiArrowUpRight } from "react-icons/hi2";
 import projectImg1 from "../assets/smartfinance.png";
 import projectImg2 from "../assets/profilkotabogor.png";
 import projectImg3 from "../assets/fathomxdistro.png";
-import projectImg4 from "../assets/portofolio1.png";
-import projectImg5 from "../assets/portofolio2.png";
 import projectImg6 from "../assets/kalkulatorsederhana.png";
 import projectImg7 from "../assets/gopiket.png";
 import projectImg8 from "../assets/tasktrack.png";
@@ -34,7 +32,7 @@ const PROJECTS = [
     link: "https://gopiket.pplgsmkn1ciomas.my.id/",
     linkText: "View Project", // Teks khusus untuk Live Web
   },
-    {
+  {
     title: "Ruang Aman Siswa",
     description:
       "Aplikasi berbasis web untuk memanajemen bk dan konseling siswa di sekolah.",
@@ -43,7 +41,7 @@ const PROJECTS = [
     link: "https://github.com/fathanfathan2/ruang-aman-siswa.git",
     linkText: "View Repository", // Teks khusus untuk Live Web
   },
-      {
+  {
     title: "Herbal Nusantara",
     description:
       "(FrontEnd) Aplikasi berbasis web untuk memudahkan pengguna dalam mencari informasi tentang herbal nusantara.",
@@ -52,7 +50,7 @@ const PROJECTS = [
     link: "https://herbal-nusantara.vercel.app/",
     linkText: "View Project", // Teks khusus untuk Live Web
   },
-        {
+  {
     title: "Fan Finance",
     description:
       "(FrontEnd) Aplikasi berbasis web untuk memudahkan pengguna dalam mengatur dan melacak keuangan mereka.",
@@ -69,22 +67,6 @@ const PROJECTS = [
     image: projectImg9,
     link: "https://github.com/fathanfathan2/cv-gesture-recognition.git",
     linkText: "View Repository",
-  },
-  {
-    title: "Portofolio 1",
-    description: "Portofolio website.",
-    tags: ["HTML5", "CSS3", "JavaScript"],
-    image: projectImg4,
-    link: "https://fathanfathan2.github.io/Portofolio-Fathan/",
-    linkText: "View Project",
-  },
-  {
-    title: "Portofolio 2",
-    description: "Portofolio website.",
-    tags: ["React", "Tailwind", "Vite"],
-    image: projectImg5,
-    link: "https://portfolio-one-alpha-62.vercel.app/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadF9E17yNCuJc5K_kG2bdoTL1KbgdjPD55DIu3U2f1yMkcHe7efqlJa6VDMDQ_aem_Mcfj7emGueJR6hRAlQ0xzA",
-    linkText: "View Project",
   },
   {
     title: "Kalkulator Sederhana",
@@ -120,7 +102,7 @@ const PROJECTS = [
     link: "https://fathanfathan2.github.io/FathomXDistro/",
     linkText: "View Project",
   },
-    {
+  {
     title: "Jadwal Piket",
     description:
       "Aplikasi berbasis web untuk mengelola jadwal piket.",
