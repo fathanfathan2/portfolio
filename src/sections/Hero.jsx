@@ -31,9 +31,9 @@ useTexture.preload(PHOTO_PATH);
 /*                                                                            */
 /*  Texture bawaan kartu.glb adalah "atlas" 1024x1024:                         */
 /*    - sisi DEPAN  -> setengah kiri  (x 0-511,  y 4-772)                      */
-/*    - sisi BELAKANG -> setengah kanan (x 512-1023)                           */
+/*    - sisi BELAKANG -> setengah kanan (x 512-1023), tidak ter-mirror          */
 /*  Jadi foto tidak bisa langsung ditempel utuh ke `map` (hasilnya terpotong   */
-/*  dan melar). Foto digambar dulu ke area depan atlas lewat canvas.           */
+/*  dan melar). Foto digambar dulu ke kedua sisi atlas lewat canvas.           */
 /* -------------------------------------------------------------------------- */
 const ATLAS_SIZE = 1024;
 const FRONT = { x: 0, y: 4, w: 511, h: 769 };
@@ -41,46 +41,16 @@ const BACK = { x: 512, y: 2, w: 512, h: 773 };
 const CARD_ASPECT = 0.7164; // lebar / tinggi mesh kartu
 const FACE_FOCUS_Y = 0.15; // 0 = crop dari atas, 0.5 = tengah, 1 = bawah
 
-function drawBack(ctx) {
-  const { x, y, w, h } = BACK;
+// Kecerahan foto di kartu: 1 = warna asli, turunkan (mis. 0.85) kalau masih terlalu terang
+const PHOTO_BRIGHTNESS = 1;
 
-  const bg = ctx.createLinearGradient(x, y, x + w, y + h);
-  bg.addColorStop(0, "#171717");
-  bg.addColorStop(1, "#0a0a0a");
-  ctx.fillStyle = bg;
-  ctx.fillRect(x, y, w, h);
+// Kilau yang "lewat" di permukaan kartu (menggantikan silau permanen)
+const SHINE_STRENGTH = 0.4; // 0 = matikan kilau
+const SHINE_PERIOD = 5; // detik antar kilau
+const SHINE_DURATION = 1.4; // detik lama satu lintasan kilau
 
-  ctx.strokeStyle = "rgba(96, 165, 250, 0.7)";
-  ctx.lineWidth = 6;
-  ctx.strokeRect(x + 28, y + 28, w - 56, h - 56);
-
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#60a5fa";
-  ctx.font = "700 150px Inter, system-ui, sans-serif";
-  ctx.fillText("MF", x + w / 2, y + h / 2 + 30);
-
-  ctx.fillStyle = "#9ca3af";
-  ctx.font = "500 30px Inter, system-ui, sans-serif";
-  ctx.fillText("FRONTEND DEVELOPER", x + w / 2, y + h / 2 + 100);
-}
-
-function buildCardTexture(photo, maxAnisotropy) {
-  const canvas = document.createElement("canvas");
-  canvas.width = ATLAS_SIZE;
-  canvas.height = ATLAS_SIZE;
-  const ctx = canvas.getContext("2d");
-
-  // dasar atlas
-  ctx.fillStyle = "#0a0a0a";
-  ctx.fillRect(0, 0, ATLAS_SIZE, ATLAS_SIZE);
-
-  // sisi belakang
-  drawBack(ctx);
-
-  // sisi depan: foto dengan crop "cover" sesuai rasio kartu
-  ctx.fillStyle = "#171717";
-  ctx.fillRect(0, 0, 512, 777);
-
+// Gambar foto ke satu sisi atlas dengan crop "cover" sesuai rasio kartu
+function drawPhotoCover(ctx, photo, rect) {
   const iw = photo.naturalWidth || photo.width;
   const ih = photo.naturalHeight || photo.height;
   let sw = iw;
@@ -92,7 +62,22 @@ function buildCardTexture(photo, maxAnisotropy) {
   }
   const sx = (iw - sw) / 2;
   const sy = (ih - sh) * FACE_FOCUS_Y;
-  ctx.drawImage(photo, sx, sy, sw, sh, FRONT.x, FRONT.y, FRONT.w, FRONT.h);
+  ctx.drawImage(photo, sx, sy, sw, sh, rect.x, rect.y, rect.w, rect.h);
+}
+
+function buildCardTexture(photo, maxAnisotropy) {
+  const canvas = document.createElement("canvas");
+  canvas.width = ATLAS_SIZE;
+  canvas.height = ATLAS_SIZE;
+  const ctx = canvas.getContext("2d");
+
+  // dasar atlas
+  ctx.fillStyle = "#171717";
+  ctx.fillRect(0, 0, ATLAS_SIZE, ATLAS_SIZE);
+
+  // sisi depan (kiri) dan sisi belakang (kanan): sama-sama foto Anda
+  drawPhotoCover(ctx, photo, FRONT);
+  drawPhotoCover(ctx, photo, BACK);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.flipY = false; // wajib false: UV GLB memakai origin kiri-atas
@@ -151,6 +136,32 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
+  // Kilau diagonal yang lewat tiap beberapa detik (dihitung di shader kartu)
+  const shine = useMemo(() => ({ value: 2 }), []);
+  const onBeforeCompile = useMemo(
+    () => (shader) => {
+      shader.uniforms.uShine = shine;
+      shader.uniforms.uShineStrength = { value: SHINE_STRENGTH };
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vShinePos;")
+        .replace("#include <begin_vertex>", "#include <begin_vertex>\nvShinePos = position;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace(
+          "#include <common>",
+          "#include <common>\nvarying vec3 vShinePos;\nuniform float uShine;\nuniform float uShineStrength;"
+        )
+        .replace(
+          "#include <emissivemap_fragment>",
+          `#include <emissivemap_fragment>
+          float shineS = vShinePos.x * 0.7 + (vShinePos.y - 0.5) * 0.7;
+          float shineQ = (shineS - mix(-0.9, 0.9, uShine)) / 0.09;
+          float shineBand = exp(-shineQ * shineQ) * step(uShine, 1.0);
+          totalEmissiveRadiance += vec3(shineBand * uShineStrength);`
+        );
+    },
+    [shine]
+  );
+
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
@@ -164,6 +175,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
+    shine.value = (state.clock.elapsedTime % SHINE_PERIOD) / SHINE_DURATION;
     if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
@@ -240,13 +252,18 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             )}
           >
             <mesh geometry={nodes.card.geometry}>
+              {/* Foto ditampilkan lewat emissiveMap (tidak terpengaruh lampu),
+                  dan toneMapped={false} agar warnanya tidak "terbakar". */}
               <meshPhysicalMaterial
-                map={cardMap}
-                map-anisotropy={16}
-                clearcoat={1}
-                clearcoatRoughness={0.15}
-                roughness={0.35}
-                metalness={0.1}
+                color="black"
+                emissive="white"
+                emissiveMap={cardMap}
+                emissiveIntensity={PHOTO_BRIGHTNESS}
+                toneMapped={false}
+                roughness={1}
+                metalness={0}
+                specularIntensity={0}
+                onBeforeCompile={onBeforeCompile}
               />
             </mesh>
             <mesh
@@ -275,15 +292,69 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Scene 3D (Canvas) yang menggantikan foto statis                            */
+/*  Scene 3D (Canvas)                                                          */
 /* -------------------------------------------------------------------------- */
-function Card3D() {
+
+// Desktop: Canvas selebar Hero (di belakang teks), kartu digeser ke kolom kanan.
+// Makin KECIL angka Z, makin BESAR kartunya. Jangan lebih dari ~18, kalau tidak
+// ujung atas tali akan terlihat menggantung di tengah layar.
+const CAMERA_Z_DESKTOP = 12;
+const CAMERA_Z_MOBILE = 11.5;
+const FOV = 25;
+
+function useIsDesktop(query = "(min-width: 768px)") {
+  const [matches, setMatches] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(query).matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = (e) => setMatches(e.matches);
+    setMatches(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
+}
+
+// Menggeser posisi kartu di layar ke tengah kolom kanan (tanpa menggeser kamera,
+// jadi logika drag tetap akurat).
+function CameraRig({ desktop }) {
+  const camera = useThree((state) => state.camera);
+  const size = useThree((state) => state.size);
+
+  useEffect(() => {
+    const { width, height } = size;
+    if (!desktop) {
+      camera.clearViewOffset();
+      camera.position.set(0, 0, CAMERA_Z_MOBILE);
+      camera.updateProjectionMatrix();
+      return;
+    }
+    // pusat kolom kanan: max-w-6xl (1152px), px-6, gap-12
+    const gridW = Math.min(1152, width - 48);
+    const gridLeft = (width - gridW) / 2;
+    const cardX = gridLeft + gridW - (gridW - 48) / 4;
+    const shiftPx = cardX - width / 2;
+
+    camera.position.set(0, 0, CAMERA_Z_DESKTOP);
+    camera.setViewOffset(width, height, -shiftPx, 0, width, height);
+  }, [camera, size, desktop]);
+
+  return null;
+}
+
+function Card3D({ desktop = false, eventSource }) {
   return (
     <Canvas
-      camera={{ position: [0, 0, 13], fov: 25 }}
+      camera={{ position: [0, 0, desktop ? CAMERA_Z_DESKTOP : CAMERA_Z_MOBILE], fov: FOV }}
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
+      // Desktop: event pointer dibaca dari seluruh section, jadi teks & tombol
+      // tetap bisa diklik dan kartu tetap bisa diseret.
+      eventSource={desktop ? eventSource : undefined}
+      eventPrefix={desktop ? "client" : "offset"}
     >
+      <CameraRig desktop={desktop} />
       <ambientLight intensity={Math.PI} />
       <Suspense fallback={null}>
         <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
@@ -312,6 +383,8 @@ const wordsToType = [
 ];
 
 function Hero() {
+  const sectionRef = useRef(null);
+  const isDesktop = useIsDesktop();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -367,9 +440,10 @@ function Hero() {
   return (
     <section
       id="hero"
+      ref={sectionRef}
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
-      className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 overflow-hidden"
+      className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 overflow-hidden select-none touch-pan-y"
     >
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
@@ -396,6 +470,13 @@ function Hero() {
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         className="absolute -bottom-20 -right-20 w-96 h-96 bg-cyan-600/20 rounded-full blur-[120px] pointer-events-none"
       />
+
+      {/* Desktop: Canvas 3D selebar Hero, di belakang teks (z-10 di bawah) */}
+      {isDesktop && (
+        <div className="pointer-events-none absolute inset-0">
+          <Card3D desktop eventSource={sectionRef} />
+        </div>
+      )}
 
       <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-center gap-12 relative z-10">
         <motion.div
@@ -470,20 +551,17 @@ function Hero() {
           </div>
         </motion.div>
 
-        {/* Kolom kanan: Canvas 3D Card (menggantikan foto statis).
-            Catatan: JANGAN beri `scale` pada ancestor Canvas, karena ukuran
-            Canvas diukur dari getBoundingClientRect dan bisa jadi terlalu kecil. */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="order-first md:order-last relative w-full flex justify-center md:justify-end"
+        {/* Kolom kanan: di desktop kosong (kartu ada di layer belakang);
+            di mobile Canvas ditaruh di sini, di atas teks. */}
+        <div
+          className={
+            isDesktop
+              ? ""
+              : "order-first relative w-full h-[380px] sm:h-[440px]"
+          }
         >
-          <div className="relative w-full max-w-md lg:max-w-lg h-[380px] sm:h-[440px] md:h-[500px] lg:h-[580px] overflow-hidden touch-pan-y">
-            <div className="pointer-events-none absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 opacity-20 blur-3xl animate-pulse" />
-            <Card3D />
-          </div>
-        </motion.div>
+          {!isDesktop && <Card3D />}
+        </div>
       </div>
     </section>
   );
