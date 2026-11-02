@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback, memo, Suspense } from "react";
 import { motion } from "framer-motion";
 import * as THREE from "three";
 import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
@@ -90,7 +90,7 @@ function buildCardTexture(photo, maxAnisotropy) {
 /* -------------------------------------------------------------------------- */
 /*  Kartu + tali (fisika)                                                      */
 /* -------------------------------------------------------------------------- */
-function Band({ maxSpeed = 50, minSpeed = 10 }) {
+function Band({ maxSpeed = 50, minSpeed = 10, onReady }) {
   const band = useRef();
   const fixed = useRef();
   const j1 = useRef();
@@ -123,6 +123,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     [photoTexture, gl]
   );
   useEffect(() => () => cardMap.dispose(), [cardMap]);
+
+  // Beri tahu Hero bahwa aset sudah termuat (untuk fade-in kartu)
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
 
   const [curve] = useState(
     () =>
@@ -343,12 +348,19 @@ function CameraRig({ desktop }) {
   return null;
 }
 
-function Card3D({ desktop = false, eventSource }) {
+// Objek konfigurasi ditaruh di luar komponen supaya tidak dibuat ulang
+// (objek baru tiap render membuat R3F meng-konfigurasi ulang Canvas).
+const GL_OPTIONS = { antialias: true, alpha: true };
+const DPR_RANGE = [1, 1.5];
+const CAMERA_DESKTOP = { position: [0, 0, CAMERA_Z_DESKTOP], fov: FOV };
+const CAMERA_MOBILE = { position: [0, 0, CAMERA_Z_MOBILE], fov: FOV };
+
+const Card3D = memo(function Card3D({ desktop = false, eventSource, onReady }) {
   return (
     <Canvas
-      camera={{ position: [0, 0, desktop ? CAMERA_Z_DESKTOP : CAMERA_Z_MOBILE], fov: FOV }}
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
+      camera={desktop ? CAMERA_DESKTOP : CAMERA_MOBILE}
+      dpr={DPR_RANGE}
+      gl={GL_OPTIONS}
       // Desktop: event pointer dibaca dari seluruh section, jadi teks & tombol
       // tetap bisa diklik dan kartu tetap bisa diseret.
       eventSource={desktop ? eventSource : undefined}
@@ -358,7 +370,7 @@ function Card3D({ desktop = false, eventSource }) {
       <ambientLight intensity={Math.PI} />
       <Suspense fallback={null}>
         <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
-          <Band />
+          <Band onReady={onReady} />
         </Physics>
       </Suspense>
       {/* tanpa prop `background` agar latar Hero tetap terlihat */}
@@ -371,7 +383,7 @@ function Card3D({ desktop = false, eventSource }) {
       </Environment>
     </Canvas>
   );
-}
+});
 
 /* -------------------------------------------------------------------------- */
 /*  Hero                                                                       */
@@ -382,34 +394,27 @@ const wordsToType = [
   "React & Web Enthusiast",
 ];
 
-function Hero() {
-  const sectionRef = useRef(null);
-  const isDesktop = useIsDesktop();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+/* -------------------------------------------------------------------------- */
+/*  Teks mengetik: dipisah jadi komponen sendiri supaya setiap huruf yang       */
+/*  berubah TIDAK me-render ulang seluruh Hero (termasuk scene 3D).            */
+/* -------------------------------------------------------------------------- */
+function TypingText({ start }) {
+  const [begun, setBegun] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [displayText, setDisplayText] = useState("");
 
-  const updateSpotlight = (clientX, clientY, currentTarget) => {
-    const rect = currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: clientX - rect.left,
-      y: clientY - rect.top,
-    });
-  };
-
-  const handleMouseMove = (e) => {
-    updateSpotlight(e.clientX, e.clientY, e.currentTarget);
-  };
-
-  const handleTouchMove = (e) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    updateSpotlight(touch.clientX, touch.clientY, e.currentTarget);
-  };
+  // Mulai mengetik sedikit setelah sinyal `start`, supaya frame pertama
+  // kartu 3D selesai dulu.
+  useEffect(() => {
+    if (!start) return;
+    const id = setTimeout(() => setBegun(true), TYPING_START_DELAY_MS);
+    return () => clearTimeout(id);
+  }, [start]);
 
   useEffect(() => {
+    if (!begun) return;
     const currentWord = wordsToType[textIndex];
     let typingSpeed = isDeleting ? 40 : 80;
 
@@ -435,22 +440,38 @@ function Hero() {
     }, typingSpeed);
 
     return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, textIndex]);
+  }, [begun, charIndex, isDeleting, textIndex]);
+
+  return <span>{displayText}</span>;
+}
+
+// Animasi mengetik baru dimulai setelah kartu 3D selesai dimuat (supaya tidak
+// berebut dengan proses berat saat load). Kalau 3D gagal/lambat, tetap mulai
+// setelah TYPING_FALLBACK_MS.
+const TYPING_START_DELAY_MS = 400;
+const TYPING_FALLBACK_MS = 4000;
+
+function Hero() {
+  const sectionRef = useRef(null);
+  const isDesktop = useIsDesktop();
+  const [cardLoaded, setCardLoaded] = useState(false);
+  const [typingFallback, setTypingFallback] = useState(false);
+  const handleCardReady = useCallback(() => setCardLoaded(true), []);
+
+  useEffect(() => {
+    const id = setTimeout(() => setTypingFallback(true), TYPING_FALLBACK_MS);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <section
       id="hero"
       ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
-      className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 overflow-hidden select-none touch-pan-y"
+      className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 isolate overflow-hidden select-none touch-pan-y"
     >
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.12), transparent 80%)`,
-        }}
-      />
+      {/* Cahaya biru statis di tengah (tidak mengikuti kursor).
+          Ubah ukuran di w-[...] / h-[...], ubah terangnya di angka 0.25. */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(95vw,900px)] h-[min(75vh,620px)] bg-[radial-gradient(closest-side,rgba(59,130,246,0.25),transparent)]" />
 
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293715_1px,transparent_1px),linear-gradient(to_bottom,#1f293715_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
@@ -460,7 +481,7 @@ function Hero() {
           opacity: [0.2, 0.4, 0.2],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"
+        className="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none will-change-transform"
       />
       <motion.div
         animate={{
@@ -468,13 +489,18 @@ function Hero() {
           opacity: [0.15, 0.3, 0.15],
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute -bottom-20 -right-20 w-96 h-96 bg-cyan-600/20 rounded-full blur-[120px] pointer-events-none"
+        className="absolute -bottom-20 -right-20 w-96 h-96 bg-cyan-600/20 rounded-full blur-[120px] pointer-events-none will-change-transform"
       />
 
-      {/* Desktop: Canvas 3D selebar Hero, di belakang teks (z-10 di bawah) */}
+      {/* Desktop: Canvas 3D selebar Hero, DI ATAS teks (z-20). pointer-events-none
+          membuat teks & tombol di bawahnya tetap bisa diklik. */}
       {isDesktop && (
-        <div className="pointer-events-none absolute inset-0">
-          <Card3D desktop eventSource={sectionRef} />
+        <div
+          className={`pointer-events-none absolute inset-0 z-20 transition-opacity duration-300 ${
+            cardLoaded ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <Card3D desktop eventSource={sectionRef} onReady={handleCardReady} />
         </div>
       )}
 
@@ -495,7 +521,7 @@ function Hero() {
           </h1>
 
           <h2 className="font-heading text-blue-400 text-xl sm:text-2xl font-semibold mb-6 min-h-[36px] flex items-center">
-            <span>{displayText}</span>
+            <TypingText start={cardLoaded || typingFallback} />
             <span className="w-0.5 h-6 bg-blue-400 ml-1 animate-pulse" />
           </h2>
 
@@ -560,7 +586,15 @@ function Hero() {
               : "order-first relative w-full h-[380px] sm:h-[440px]"
           }
         >
-          {!isDesktop && <Card3D />}
+          {!isDesktop && (
+            <div
+              className={`h-full w-full transition-opacity duration-300 ${
+                cardLoaded ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Card3D onReady={handleCardReady} />
+            </div>
+          )}
         </div>
       </div>
     </section>
