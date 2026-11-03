@@ -8,12 +8,17 @@ import {
   FaFigma,
   FaNpm,
   FaPython,
+  FaNodeJs,
+  FaLaravel,
+  FaPhp,
 } from "react-icons/fa";
-import { SiTailwindcss, SiVite } from "react-icons/si";
+import { SiTailwindcss, SiVite, SiMysql, SiSupabase } from "react-icons/si";
 
+// Backend & Database diisi dari teknologi yang sudah kamu pakai di Projects.
+// Hapus yang belum nyaman kamu klaim.
 const SKILL_CATEGORIES = [
   {
-    title: "Frontend Development",
+    title: "Frontend",
     skills: [
       { name: "HTML5", icon: FaHtml5 },
       { name: "CSS3", icon: FaCss3Alt },
@@ -24,14 +29,18 @@ const SKILL_CATEGORIES = [
     ],
   },
   {
-    title: "Backend & Scripting",
+    title: "Backend & Database",
     skills: [
+      { name: "Node.js", icon: FaNodeJs },
+      { name: "PHP", icon: FaPhp },
+      { name: "Laravel", icon: FaLaravel },
+      { name: "MySQL", icon: SiMysql },
+      { name: "Supabase", icon: SiSupabase },
       { name: "Python", icon: FaPython },
-      // Bisa ditambahkan FaNodeJs atau FaLaravel di sini nanti
     ],
   },
   {
-    title: "Tools & Others",
+    title: "Tools",
     skills: [
       { name: "Git", icon: FaGitAlt },
       { name: "GitHub", icon: FaGithub },
@@ -43,42 +52,36 @@ const SKILL_CATEGORIES = [
 
 function Skills() {
   return (
-    <section id="skills" className="bg-neutral-950 py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Section heading */}
-        <div className="mb-16 max-w-2xl">
-          <p className="text-blue-500 font-medium text-sm uppercase tracking-widest mb-2">
-            What I Work With
-          </p>
-          <h2 className="font-heading text-white text-3xl sm:text-4xl font-semibold tracking-tight">
-            Skills & Technologies
-          </h2>
-        </div>
+    <section id="skills" className="border-t border-neutral-900 bg-neutral-950 px-6 py-24 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="mb-14 font-heading text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          Skills & technologies
+        </h2>
 
-        {/* Categories */}
-        <div className="flex flex-col gap-14">
+        <div className="border-t border-neutral-800">
           {SKILL_CATEGORIES.map((category) => (
-            <div key={category.title}>
-              <h3 className="font-heading text-gray-200 text-lg font-semibold mb-6">
+            <div
+              key={category.title}
+              className="grid gap-5 border-b border-neutral-800 py-8 lg:grid-cols-12 lg:gap-10"
+            >
+              <h3 className="font-heading text-lg font-medium text-neutral-400 lg:col-span-3">
                 {category.title}
               </h3>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <ul className="flex flex-wrap gap-x-10 gap-y-5 lg:col-span-9">
                 {category.skills.map((skill) => {
                   const Icon = skill.icon;
                   return (
-                    <div
+                    <li
                       key={skill.name}
-                      className="flex flex-col items-center justify-center gap-3 bg-neutral-900 border border-neutral-800 rounded-xl p-6 text-center hover:border-blue-500/50 hover:-translate-y-1 transition-all duration-300 ease-out"
+                      className="group flex items-center gap-3 text-lg text-neutral-100"
                     >
-                      <Icon className="text-3xl text-blue-500" />
-                      <span className="text-gray-300 text-sm font-medium">
-                        {skill.name}
-                      </span>
-                    </div>
+                      <Icon className="text-2xl text-neutral-500 transition-colors duration-200 group-hover:text-blue-500" />
+                      {skill.name}
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           ))}
         </div>

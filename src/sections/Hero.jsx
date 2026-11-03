@@ -467,7 +467,7 @@ function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-screen flex items-center bg-neutral-950 pt-24 pb-16 px-6 isolate overflow-hidden select-none touch-pan-y"
+      className="relative min-h-svh flex items-center bg-neutral-950 pt-24 pb-16 px-6 isolate overflow-hidden select-none touch-pan-y"
     >
       {/* Cahaya biru statis di tengah (tidak mengikuti kursor).
           Ubah ukuran di w-[...] / h-[...], ubah terangnya di angka 0.25. */}
@@ -515,12 +515,12 @@ function Hero() {
             Hello, I'm
           </p>
 
-          <h1 className="font-heading text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+          <h1 className="font-heading text-white text-4xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight mb-4">
             Muhammad Fathan{" "}
             <span className="text-blue-400">Ali Khalifah</span>
           </h1>
 
-          <h2 className="font-heading text-blue-400 text-xl sm:text-2xl font-semibold mb-6 min-h-[36px] flex items-center">
+          <h2 className="font-heading text-blue-400 text-xl sm:text-2xl font-semibold mb-6 min-h-[56px] sm:min-h-[36px] flex items-center">
             <TypingText start={cardLoaded || typingFallback} />
             <span className="w-0.5 h-6 bg-blue-400 ml-1 animate-pulse" />
           </h2>

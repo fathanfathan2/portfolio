@@ -27,3 +27,9 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem; /* Memberi jarak offset setinggi Navbar */
 }
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}

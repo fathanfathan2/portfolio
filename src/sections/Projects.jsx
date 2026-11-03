@@ -1,6 +1,7 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { HiArrowUpRight } from "react-icons/hi2";
 
-// 1. IMPORT GAMBAR (Pastikan nama & ekstensi file ini ADA di folder src/assets)
 import projectImg1 from "../assets/smartfinance.png";
 import projectImg2 from "../assets/profilkotabogor.png";
 import projectImg3 from "../assets/fathomxdistro.png";
@@ -21,25 +22,23 @@ const PROJECTS = [
     tags: ["React", "Tailwind CSS", "Node JS"],
     image: projectImg1,
     link: "https://github.com/fathanfathan2/smart-finance-app",
-    linkText: "View Repository", // Teks khusus untuk GitHub
+    linkText: "View Repository",
   },
   {
     title: "GoPiket",
-    description:
-      "Aplikasi berbasis web untuk memudahkan guru dalam mengatur jadwal piket kelas.",
+    description: "Aplikasi berbasis web untuk memudahkan guru dalam mengatur jadwal piket kelas.",
     tags: ["React", "Supabase", "JavaScript"],
     image: projectImg7,
     link: "https://gopiket.pplgsmkn1ciomas.my.id/",
-    linkText: "View Project", // Teks khusus untuk Live Web
+    linkText: "View Project",
   },
   {
     title: "Ruang Aman Siswa",
-    description:
-      "Aplikasi berbasis web untuk memanajemen bk dan konseling siswa di sekolah.",
+    description: "Aplikasi berbasis web untuk memanajemen bk dan konseling siswa di sekolah.",
     tags: ["Laravel", "PHP", "MySQL"],
     image: projectImg11,
     link: "https://github.com/fathanfathan2/ruang-aman-siswa.git",
-    linkText: "View Repository", // Teks khusus untuk Live Web
+    linkText: "View Repository",
   },
   {
     title: "Herbal Nusantara",
@@ -48,7 +47,7 @@ const PROJECTS = [
     tags: ["React", "Tailwind", "Vite"],
     image: projectImg12,
     link: "https://herbal-nusantara.vercel.app/",
-    linkText: "View Project", // Teks khusus untuk Live Web
+    linkText: "View Project",
   },
   {
     title: "Fan Finance",
@@ -57,7 +56,7 @@ const PROJECTS = [
     tags: ["HTML5", "CSS3", "JavaScript"],
     image: projectImg13,
     link: "https://fanfinance.vercel.app/",
-    linkText: "View Project", // Teks khusus untuk Live Web
+    linkText: "View Project",
   },
   {
     title: "Computer Vision and Monkey Image",
@@ -104,8 +103,7 @@ const PROJECTS = [
   },
   {
     title: "Jadwal Piket",
-    description:
-      "Aplikasi berbasis web untuk mengelola jadwal piket.",
+    description: "Aplikasi berbasis web untuk mengelola jadwal piket.",
     tags: ["Laravel", "Tailwind", "Vite", "MySQL", "PHP"],
     image: projectImg10,
     link: "https://github.com/fathanfathan2/jadwal-piket.git",
@@ -113,71 +111,121 @@ const PROJECTS = [
   },
 ];
 
-function Projects() {
+// "View Project" = ada versi live, "View Repository" = hanya source code
+const isLive = (project) => project.linkText === "View Project";
+
+const hostOf = (url) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
+
+function StatusMark({ live }) {
   return (
-    <section id="projects" className="bg-neutral-950 py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Section heading */}
-        <div className="mb-16 max-w-2xl">
-          <p className="text-blue-500 font-medium text-sm uppercase tracking-widest mb-2">
-            My Work
-          </p>
-          <h2 className="font-heading text-white text-3xl sm:text-4xl font-semibold tracking-tight">
-            Featured Projects
+    <span className="inline-flex items-center gap-2 text-xs text-neutral-500">
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${
+          live ? "bg-blue-500" : "border border-neutral-500"
+        }`}
+        aria-hidden="true"
+      />
+      {live ? "Live" : "Source code"}
+    </span>
+  );
+}
+
+function Projects() {
+  const [active, setActive] = useState(0);
+  const current = PROJECTS[active];
+
+  return (
+    <section id="projects" className="border-t border-neutral-900 bg-neutral-950 px-6 py-24 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 flex items-end justify-between gap-6">
+          <h2 className="font-heading text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            Projects
           </h2>
+          <p className="pb-1 text-sm tabular-nums text-neutral-500">{PROJECTS.length} projects</p>
         </div>
 
-        {/* Project grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PROJECTS.map((project, index) => (
-            <div
-              key={index}
-              className="group flex flex-col bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 ease-out"
-            >
-              {/* Wadah FOTO PROJECT */}
-              <div className="relative w-full aspect-video bg-neutral-950 overflow-hidden border-b border-neutral-800">
-                <img
-                  src={project.image}
-                  alt={`Screenshot of ${project.title}`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
-              </div>
-
-              {/* Konten Teks */}
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="font-heading text-white text-xl font-semibold mb-3">
-                  {project.title}
-                </h3>
-
-                <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-1">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs font-medium text-blue-500 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Tombol Dinamis */}
+        <div className="grid gap-12 lg:grid-cols-12">
+          {/* Daftar project */}
+          <ul className="border-t border-neutral-800 lg:col-span-7">
+            {PROJECTS.map((project, index) => (
+              <li key={project.title} className="border-b border-neutral-800">
                 <a
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onMouseEnter={() => setActive(index)}
+                  onFocus={() => setActive(index)}
                   aria-label={`${project.linkText} for ${project.title}`}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-200 group-hover:text-blue-500 transition-colors duration-300 mt-auto"
+                  className="group flex gap-5 py-6 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-500"
                 >
-                  {project.linkText || "View Project"}
-                  <HiArrowUpRight className="text-base" />
+                  {/* Thumbnail hanya di mobile, di desktop ada preview di kanan */}
+                  <img
+                    src={project.image}
+                    alt=""
+                    loading="lazy"
+                    className="aspect-video w-24 shrink-0 self-start rounded-sm border border-neutral-800 object-cover sm:w-32 lg:hidden"
+                  />
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <h3
+                        className={`font-heading text-2xl font-semibold tracking-tight transition-colors duration-200 sm:text-3xl text-white ${
+                          active === index ? "lg:text-white" : "lg:text-neutral-500"
+                        }`}
+                      >
+                        {project.title}
+                      </h3>
+                      <HiArrowUpRight
+                        className={`mt-1.5 shrink-0 text-xl transition-colors duration-200 ${
+                          active === index ? "text-blue-500" : "text-neutral-600"
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </div>
+
+                    <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-400">
+                      {project.description}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1">
+                      <StatusMark live={isLive(project)} />
+                      <span className="text-xs text-neutral-500">{project.tags.join(", ")}</span>
+                    </div>
+                  </div>
                 </a>
+              </li>
+            ))}
+          </ul>
+
+          {/* Preview sticky (desktop) */}
+          <aside className="hidden lg:col-span-5 lg:block" aria-hidden="true">
+            <div className="sticky top-28">
+              <div className="relative aspect-video overflow-hidden rounded-sm border border-neutral-800 bg-neutral-900">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={current.image}
+                    src={current.image}
+                    alt=""
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </AnimatePresence>
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-4">
+                <p className="truncate text-sm text-neutral-400">{hostOf(current.link)}</p>
+                <StatusMark live={isLive(current)} />
               </div>
             </div>
-          ))}
+          </aside>
         </div>
       </div>
     </section>

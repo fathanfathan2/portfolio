@@ -17,7 +17,7 @@ function App() {
       <Projects />
       <Certificates />
       <Contact />
-      <Footer /> {/* <--- 2. Panggil di paling bawah */}
+      <Footer />
     </main>
   );
 }
