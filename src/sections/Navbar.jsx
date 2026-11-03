@@ -84,7 +84,7 @@ function Navbar() {
           className="flex items-center gap-2.5 font-heading text-lg font-semibold tracking-tight text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
         >
           <span className="h-2 w-2 bg-blue-500" aria-hidden="true" />
-          Fathan Ali
+          Portofolio
         </a>
 
         {/* Desktop links */}
